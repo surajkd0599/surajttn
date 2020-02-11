@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Form</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <header>
+        <div class="header">
+            <a href="#default" class = "b">TO THE NEW</a>
+            <div class="header-right">
+                <a href ="#Quickhelp"> <h6>Quick Help</h6></a> 
+            <a href ="#home" > <h6>Home</h6></a> 
+            
+            
+            </div>
+        </div><br>
+        </header>
+
+        <hr class="hori">
+       
+            <table align="center" class = "form">
+                <tr class ="formhead" align="left">
+                    <th> Bug Report</th>   
+                </tr> 
+                <td>Title:* <br>
+                    <input type = "text" size="31" class = "box"></td><br><br>
+                <tr >
+                <td>Description:* <br>
+                    <textarea cols="31" rows="5" class = "box"></textarea> </td>
+                </tr>
+                <tr ><td ><br>Operating System:<br>
+                    <select name="os" id="os1" class = "cbox">
+                        <option value="Windows" ><strong>Windows XP</strong></option>
+                    </select>
+                    </td></tr>
+                    <tr><td>Product:*<br>
+                        <select name="os" id="os1" class = "cbox">
+                            <option value="Formoid"><strong>Formoid</strong></option>
+                        <select>
+                    </td></tr>
+                    <tr>
+                        <td>
+                            Version:* <br>
+                            <input type="text" size="10" class = "box"> 
+                        </td>
+                    </tr>
+        
+                    <tr>
+                        <td>
+                            License:<br>
+                            <input type="radio" name=rad>Free
+                        
+                            
+                            <input style="margin-left:80px;" align="right" type="radio" name=rad>Business
+                        </td>
+                    </tr>
+        
+                    <tr><td>Severity:<br>
+                        <select name="os" id="os1" class = "cbox">
+                            <option value="Critical"><strong>Critical</strong></option>
+                        <select>
+                    </td></tr>
+        
+                    <tr>
+                        <td>
+                            Attachments:<br>
+                            <input type="file" class="attach">
+                        </td>
+                    </tr>
+                    <tr class = "foot">
+                        <td><input class="formbtn" type="button" value="Send" /></td>
+                </tr>
+            </table>
+    </body>
+</html>
