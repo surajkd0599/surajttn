@@ -1,0 +1,59 @@
+.navbar h2{
+    color: rgb(43, 206, 152);   
+}
+
+#header3{
+    color: white;
+    font-weight: bold;
+}
+
+.navbar-nav li a{
+    color:  rgb(43, 206, 152);  
+}
+
+.form-head{
+    background-color:  rgb(194, 194, 194);
+    padding: 5px
+}
+
+.form-group .dropdown-group{
+    background-color:  rgb(43, 206, 152);  
+    color: white;
+    font-weight: bold;
+}
+
+.form-container{
+    border: 2px solid  rgb(194, 194, 194);
+    border-radius: 8px;
+}
+
+.col-6 .form-container{
+    padding: 0px 0px
+}
+
+.form-body{
+    padding: 20px 0px;
+}
+
+.form-foot .btn{
+    background-color: rgb(43, 206, 152); 
+    color: white;
+    font-weight: bold;
+    float: right;
+}
+
+.form-foot{
+    background-color: rgb(228, 228, 228);
+    padding: 10px;
+    overflow: auto;
+}
+
+.form-body .license{
+    display: block;
+}
+
+.radios{
+    display: flex;
+    justify-content: space-around;
+    max-width: 11em;
+}
