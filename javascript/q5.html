@@ -1,0 +1,32 @@
+<html>
+    <script>
+    var Employees = [{name:"Sunny",age:23,salary:18500,DOB:"01/01/1997"},
+    {name:"Ashish",age:27,salary:10000,DOB:"01/01/1993"},
+    {name:"Tushar",age:23,salary:2800,DOB:"01/01/1997"},
+    {name:"Utkarsh",age:28,salary:11500,DOB:"01/01/1992"},
+    {name:"Hanish",age:27,salary:800,DOB:"01/01/1993"}]
+
+    //Filter by Salary
+    function filter_by_salary(ob){
+        if(ob.salary > 5000){
+            return ob;
+        }
+    }
+
+    console.log(Employees.filter(filter_by_salary));
+
+    //Group by Ages
+    function group_by_ages(ob){
+        
+    }
+
+// Fetch Employees
+    function fetch_employees(obj){
+        if(obj.salary<1000 && obj.age>20){
+           return obj.salary = 6 * obj.salary;
+        }
+    }
+
+    console.log(Employees.filter(fetch_employees));
+    </script>
+</html>
