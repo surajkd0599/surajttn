@@ -32,7 +32,9 @@
 }
 
 .form-body{
-    padding: 20px 0px;
+    padding-top: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .form-foot .btn{
@@ -56,4 +58,7 @@
     display: flex;
     justify-content: space-around;
     max-width: 11em;
+}
+.custom-file-input:lang(en)~.custom-file-label::after {
+    content: "Choose File" !important;
 }
