@@ -1,12 +1,18 @@
 package com.example.restfulservices2.restfulservices2.model;
 
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-
+@ApiModel(description = "This is user class")
 public class User {
+
+    @ApiModelProperty(notes = "This is user name")
     private String name;
+    @ApiModelProperty(notes = "This is user age")
     private int age;
 
     public User() {

@@ -1,5 +1,6 @@
-package com.example.restfulservices2.restfulservices2.model;
+package com.example.restfulservices2.restfulservices2.service;
 
+import com.example.restfulservices2.restfulservices2.model.User;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class UserService {
         return null;
     }
 
-    public User findOne(String name) {
+    public static User findOne(String name) {
         for (User user : userList) {
             if (user.getName().equals(name)) {
                 return user;
