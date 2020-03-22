@@ -3,6 +3,7 @@ package com.example.project.ecommerce.model;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -32,7 +33,13 @@ public class User {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name="user_id",referencedColumnName = "userId")
-    private Cart cart;
+    private List<Cart> cart;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name="user_id",referencedColumnName = "userId")
+    private List<Orders> orders;
+
+
     public User() {
     }
 

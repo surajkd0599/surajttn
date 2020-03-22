@@ -15,7 +15,15 @@ public class ProductVariation {
     private int stock;
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "variation_Id",referencedColumnName = "variationId")
-    CartItem cartItem;
+    private List<ProductReview> review;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "variation_Id",referencedColumnName = "variationId")
+    private List<CartItem> cartItem;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "variation_id",referencedColumnName = "variationId")
+    private List<OrderItem> orderItem;
+    @ManyToOne
+    private Product product;
 
     public String getGender() {
         return gender;

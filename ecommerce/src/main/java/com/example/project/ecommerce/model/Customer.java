@@ -6,8 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class CartItem {
+public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long itemId;
+    private Long customerId;
 }

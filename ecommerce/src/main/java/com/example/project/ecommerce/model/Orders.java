@@ -2,6 +2,7 @@ package com.example.project.ecommerce.model;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Orders {
@@ -14,7 +15,8 @@ public class Orders {
     private Date orderReceivedDate;
     private String orderStatus;
     private int orderPrice;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id",referencedColumnName = "userId")
-    private User user;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "order_id",referencedColumnName = "orderId")
+    private List<OrderItem> orderItem;
 }

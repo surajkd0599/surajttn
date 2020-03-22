@@ -12,5 +12,5 @@ public class Cart {
     private Long totalAmount;
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "cart_id",referencedColumnName = "cartId")
-    private CartItem cartItem;
+    private List<CartItem> cartItem;
 }

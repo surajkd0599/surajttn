@@ -8,10 +8,11 @@ public class ProductCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryId;
+    @Column(unique = true)
     private String categoryName;
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id",referencedColumnName = "categoryId")
-    private List<ProductVariation> productVariation;
+    private List<Product> product;
 
     public ProductCategory() {
     }
@@ -24,11 +25,11 @@ public class ProductCategory {
         this.categoryName = categoryName;
     }
 
-    public List<ProductVariation> getProductVariation() {
-        return productVariation;
+    public List<Product> getProduct() {
+        return product;
     }
 
-    public void setProductVariation(List<ProductVariation> productVariation) {
-        this.productVariation = productVariation;
+    public void setProduct(List<Product> product) {
+        this.product = product;
     }
 }
