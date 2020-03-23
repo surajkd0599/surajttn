@@ -2,6 +2,7 @@ package com.example.project.ecommerce.controller;
 
 import com.example.project.ecommerce.model.Product;
 import com.example.project.ecommerce.model.ProductCategory;
+import com.example.project.ecommerce.model.ProductVariation;
 import com.example.project.ecommerce.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +15,8 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping(path = "/addCategory")
-    public void addProduct(@RequestBody ProductCategory productCategory) {
-        productService.addCategory(productCategory);
+    public ProductCategory addProduct(@RequestBody ProductCategory productCategory) {
+        return productService.addCategory(productCategory);
     }
 
     @GetMapping(path = "/getCategory")
@@ -43,9 +44,9 @@ public class ProductController {
         return productService.priceHighToLow(productName);
     }
 
-    @PutMapping(path = "/updateStockInProduct/{productName}/{variationSize}/{quantity}")
-    public void updateStockByAdmin(@PathVariable(value = "productName") String productName ,@PathVariable("variationSize")
-            String variationSize,@PathVariable(value = "quantity") int quantity){
-        productService.updateStockByAdmin(productName,variationSize,quantity);
+    @PutMapping(path = "/updateStockInProduct/{productName}" )
+    public void updateStockByAdmin(@PathVariable(value = "productName")String productName,@RequestBody ProductVariation productVariation)
+            {
+
     }
 }

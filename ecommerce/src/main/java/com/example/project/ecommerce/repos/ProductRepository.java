@@ -16,6 +16,8 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<ProductCategory, Long> {
 
+    ProductCategory save(ProductCategory productCategory);
+
     @Query("from ProductCategory pc where pc.categoryName=:name")
     List<Object[]> findByName(@Param("name") String name);
 

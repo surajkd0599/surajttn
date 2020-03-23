@@ -1,5 +1,8 @@
 package com.example.project.ecommerce.model;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
@@ -12,7 +15,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
     @Column(unique = true)
-    private String userName;
+    private String username;
     private String firstName;
     private String lastName;
     private int age;
@@ -32,13 +35,16 @@ public class User {
     private Set<Role> roles;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name="user_id",referencedColumnName = "userId")
-    private List<Cart> cart;
+    @JoinColumn(name = "user_id",referencedColumnName = "userId")
+    private List<Admin> admin;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name="user_id",referencedColumnName = "userId")
-    private List<Orders> orders;
+    @JoinColumn(name = "user_id",referencedColumnName = "userId")
+    private List<Seller> seller;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id",referencedColumnName = "userId")
+    private List<Customer> customer;
 
     public User() {
     }
@@ -83,12 +89,36 @@ public class User {
         this.gender = gender;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public List<Admin> getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(List<Admin> admin) {
+        this.admin = admin;
+    }
+
+    public List<Seller> getSeller() {
+        return seller;
+    }
+
+    public void setSeller(List<Seller> seller) {
+        this.seller = seller;
+    }
+
+    public List<Customer> getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(List<Customer> customer) {
+        this.customer = customer;
     }
 
     public Long getUserId() {
@@ -161,7 +191,7 @@ public class User {
     public String toString() {
         return "User{" +
                 "userId=" + userId +
-                ", userName='" + userName + '\'' +
+                ", username='" + username + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", age=" + age +

@@ -14,7 +14,7 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    public void addCategory(ProductCategory productCategory){productRepository.save(productCategory);}
+    public ProductCategory addCategory(ProductCategory productCategory){return productRepository.save(productCategory);}
 
     public List<Object[]> getCategory(){
        return productRepository.findCategory();
@@ -44,8 +44,8 @@ public class ProductService {
        List<Object[]> productVariations = getVariation(productName);
        Long variationId = 0L;
        for(Object[] pv : productVariations){
-           if((String)pv[4] == productSize){
-               variationId = (Long)pv[0];
+           if(String.valueOf(pv[4]) == productSize){
+               variationId = (Long) pv[0];
                System.out.println(variationId);
            }
        }

@@ -13,6 +13,15 @@ public class ProductVariation {
     private Long price;
     private String gender;
     private int stock;
+
+    public Long getVariationId() {
+        return variationId;
+    }
+
+    public void setVariationId(Long variationId) {
+        this.variationId = variationId;
+    }
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "variation_Id",referencedColumnName = "variationId")
     private List<ProductReview> review;
