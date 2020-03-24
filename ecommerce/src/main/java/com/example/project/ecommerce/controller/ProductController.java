@@ -5,11 +5,13 @@ import com.example.project.ecommerce.model.ProductCategory;
 import com.example.project.ecommerce.model.ProductVariation;
 import com.example.project.ecommerce.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping(path = "/ecommerce")
 public class ProductController {
     @Autowired
     private ProductService productService;

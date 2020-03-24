@@ -10,12 +10,15 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 
-@RequestMapping("/rest/hello")
+@RequestMapping("/ecommerce")
 @RestController
 public class AppController {
 
     @Autowired
     private AppUserDetailsService appUserDetailsService;
+
+    @Autowired
+    ProductController productController;
 
     @Autowired
     private TokenStore tokenStore;
@@ -44,6 +47,11 @@ public class AppController {
     @GetMapping("/admin/home")
     public String adminHome(){
         return "Admin home";
+    }
+
+    @GetMapping("/seller/home")
+    public String sellerHome(){
+        return "Seller home";
     }
 
     @GetMapping("/user/home")
