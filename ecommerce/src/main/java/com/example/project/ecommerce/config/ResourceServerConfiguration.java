@@ -18,7 +18,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 @Configuration
 @EnableResourceServer
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true)
+@EnableGlobalMethodSecurity(securedEnabled = true,prePostEnabled = true)
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
     @Autowired
     AppUserDetailsService userDetailsService;
@@ -59,7 +59,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .antMatchers("/ecommerce/addUser").anonymous()
                 .antMatchers("/admin/home").hasAnyRole("ADMIN")
                 .antMatchers("/seller/home").hasAnyRole("SELLER")
-                .antMatchers("/addCategory").hasAnyRole("SELLER")
+                .antMatchers("/getCategory").hasAnyRole("ADMIN","SELLER","CUSTOMER")
+                .antMatchers("/seller/home/addCategory").hasAnyRole("SELLER")
                 .antMatchers("/user/home").hasAnyRole("ADMIN","CUSTOMER","SELLER")
                 .antMatchers("/doLogout").hasAnyRole("ADMIN","USER","SELLER")
                 .anyRequest().authenticated()

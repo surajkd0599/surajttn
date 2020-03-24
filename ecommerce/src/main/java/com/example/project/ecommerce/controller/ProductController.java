@@ -1,6 +1,5 @@
 package com.example.project.ecommerce.controller;
 
-import com.example.project.ecommerce.model.Product;
 import com.example.project.ecommerce.model.ProductCategory;
 import com.example.project.ecommerce.model.ProductVariation;
 import com.example.project.ecommerce.services.ProductService;
@@ -8,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.PostUpdate;
 import java.util.List;
 
 @RestController
@@ -16,7 +16,8 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @PostMapping(path = "/addCategory")
+    //@PreAuthorize("hasRole('SELLER')")
+    @PostMapping(path = "/seller/home/addCategory")
     public ProductCategory addProduct(@RequestBody ProductCategory productCategory) {
         return productService.addCategory(productCategory);
     }
