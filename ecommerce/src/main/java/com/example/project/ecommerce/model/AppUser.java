@@ -10,11 +10,17 @@ public class AppUser implements UserDetails {
     private String username;
     private String password;
     List<GrantedAuthorityImpl> grantedAuthorities;
+    private boolean isEnabled;
+    private boolean isAccountNonLocked;
+    private boolean isCredentialsNonExpired;
 
-    public AppUser(String username, String password, List<GrantedAuthorityImpl> grantedAuthorities) {
+    public AppUser(String username, String password, List<GrantedAuthorityImpl> grantedAuthorities, boolean isEnabled, boolean isAccountNonLocked, boolean isCredentialsNonExpired) {
         this.username = username;
         this.password = password;
         this.grantedAuthorities = grantedAuthorities;
+        this.isEnabled = isEnabled;
+        this.isAccountNonLocked = isAccountNonLocked;
+        this.isCredentialsNonExpired = isCredentialsNonExpired;
     }
 
     @Override
@@ -33,22 +39,34 @@ public class AppUser implements UserDetails {
     }
 
     @Override
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return isAccountNonLocked;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return isCredentialsNonExpired;
     }
 
     @Override
-    public boolean isEnabled() {
-        return true;
+    public String toString() {
+        return "AppUser{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", grantedAuthorities=" + grantedAuthorities +
+                ", isEnabled=" + isEnabled +
+                ", isAccountNonLocked=" + isAccountNonLocked +
+                ", isCredentialsNonExpired=" + isCredentialsNonExpired +
+                '}';
     }
 }

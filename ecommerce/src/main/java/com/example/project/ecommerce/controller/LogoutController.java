@@ -1,32 +1,31 @@
 package com.example.project.ecommerce.controller;
 
+import com.example.project.ecommerce.dao.UserRegisterVo;
+import com.example.project.ecommerce.exception.UserNotFoundException;
 import com.example.project.ecommerce.model.User;
 import com.example.project.ecommerce.services.AppUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.net.URI;
 
 
 @RequestMapping("/ecommerce")
 @RestController
-public class AppController {
+public class LogoutController {
 
     @Autowired
     private AppUserDetailsService appUserDetailsService;
 
     @Autowired
-    ProductController productController;
-
-    @Autowired
     private TokenStore tokenStore;
-
-    @PostMapping(path = "/addUser")
-    public void addUser(@RequestBody User user){
-        appUserDetailsService.addUser(user);
-    }
 
     @GetMapping("/doLogout")
     public String logout(HttpServletRequest request){
@@ -44,20 +43,23 @@ public class AppController {
         return "index";
     }
 
-    @GetMapping("/admin/home")
+   /* @GetMapping("/admin/home")
     public String adminHome(){
         return "Admin home";
     }
-
-    @GetMapping("/seller/home")
+*/
+    /*@GetMapping("/seller/home")
     public String sellerHome(){
         return "Seller home";
-    }
+    }*/
 
-    @GetMapping("/user/home")
+    /*@GetMapping("/user/home")
     public String userHome(){
         return "User home";
+    }*/
+
+    @PutMapping("/updateUserDetails/{username}")
+    public void updateUserUsername(@PathVariable("username") String username, String userName){
+        appUserDetailsService.updateUserUsername(username,userName);
     }
-
-
 }

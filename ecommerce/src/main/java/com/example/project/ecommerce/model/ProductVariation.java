@@ -1,5 +1,7 @@
 package com.example.project.ecommerce.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -13,16 +15,17 @@ public class ProductVariation {
     private Long price;
     private String gender;
     private int stock;
+    private String brand;
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "variation_Id",referencedColumnName = "variationId")
+    @JoinColumn(name = "product_Id")
     private List<ProductReview> review;
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "variation_Id",referencedColumnName = "variationId")
-    private List<CartItem> cartItem;
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "variation_id",referencedColumnName = "variationId")
-    private List<OrderItem> orderItem;
+
+    @ManyToMany(cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
+    @JoinTable(name = "product_seller",joinColumns = @JoinColumn(name = "variation_id",referencedColumnName = "variationId")
+            ,inverseJoinColumns = @JoinColumn(name = "seller_user_id"))
+    private List<Seller> sellers;
 
     public Long getVariationId() {
         return variationId;
@@ -73,5 +76,29 @@ public class ProductVariation {
 
     public void setPrice(Long price) {
         this.price = price;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public List<ProductReview> getReview() {
+        return review;
+    }
+
+    public void setReview(List<ProductReview> review) {
+        this.review = review;
+    }
+
+    public List<Seller> getSellers() {
+        return sellers;
+    }
+
+    public void setSellers(List<Seller> sellers) {
+        this.sellers = sellers;
     }
 }

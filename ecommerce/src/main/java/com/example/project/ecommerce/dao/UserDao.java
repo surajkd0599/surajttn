@@ -1,15 +1,15 @@
-package com.example.project.ecommerce.repos;
+package com.example.project.ecommerce.dao;
 
+import com.example.project.ecommerce.exception.UserNotFoundException;
 import com.example.project.ecommerce.model.AppUser;
 import com.example.project.ecommerce.model.GrantedAuthorityImpl;
 import com.example.project.ecommerce.model.Role;
 import com.example.project.ecommerce.model.User;
+import com.example.project.ecommerce.repos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -28,10 +28,10 @@ public class UserDao {
             }
             System.out.println(grantedAuthorityImpl);
             return new AppUser(user.getUsername(), user.getPassword(),
-                    grantedAuthorityImpl);
+                    grantedAuthorityImpl,user.isActive(),!user.isEnabled(),!user.isCredentialsNonExpired());
         }
         else {
-            throw new UsernameNotFoundException("Username not found");
+            throw new UserNotFoundException("User not found");
         }
 
     }

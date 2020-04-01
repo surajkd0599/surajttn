@@ -4,20 +4,18 @@ import com.example.project.ecommerce.model.ProductCategory;
 import com.example.project.ecommerce.model.ProductVariation;
 import com.example.project.ecommerce.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.PostUpdate;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/ecommerce")
+@RequestMapping(path = "/ecommerce/products")
 public class ProductController {
     @Autowired
     private ProductService productService;
 
     //@PreAuthorize("hasRole('SELLER')")
-    @PostMapping(path = "/seller/home/addCategory")
+    @PostMapping(path = "/addCategory")
     public ProductCategory addProduct(@RequestBody ProductCategory productCategory) {
         return productService.addCategory(productCategory);
     }

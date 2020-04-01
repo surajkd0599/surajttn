@@ -1,13 +1,26 @@
 package com.example.project.ecommerce.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
-public class Seller {
-    @Id
+@PrimaryKeyJoinColumn(name = "userId")
+public class Seller extends User{
+
+    /*@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long sellerId;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private User user;*/
+
+    private String companyName;
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
 }

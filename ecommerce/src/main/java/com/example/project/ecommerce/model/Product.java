@@ -15,11 +15,6 @@ public class Product {
     @JoinColumn(name = "product_id", referencedColumnName = "productId")
     private List<ProductVariation> productVariations;
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    @JoinTable(name = "product_seller",joinColumns = @JoinColumn(name = "product_id",referencedColumnName = "productId")
-            ,inverseJoinColumns = @JoinColumn(name = "seller_id",referencedColumnName = "sellerId"))
-    private List<Seller> sellers;
-
     public Product() {
     }
 

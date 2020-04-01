@@ -1,6 +1,7 @@
 package com.example.project.ecommerce.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class OrderItem {
@@ -8,4 +9,8 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long OrderItemId;
     private int quantity;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "variation_id")
+    private ProductVariation productVariations;
 }
