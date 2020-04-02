@@ -1,5 +1,6 @@
 package com.example.project.ecommerce.controller;
 
+import com.example.project.ecommerce.model.Admin;
 import com.example.project.ecommerce.model.Customer;
 import com.example.project.ecommerce.model.Seller;
 import com.example.project.ecommerce.model.User;
@@ -34,14 +35,14 @@ public class RegisterController {
         return getMessage;
     }
 
-    @GetMapping(path = "/confirm-account")
+    @PutMapping(path = "/confirm-account")
     public String confirmCustomerAccount(@RequestParam("token") String token){
         return customerActivateService.activateCustomer(token);
     }
 
-    @GetMapping("/sendemail")
-    public void sendEmail(){
-        sendEmail.sendEmail("RE-ACCOUNT ACTIVATE TOKEN","12356gh","manoj260191@gmail.com");
+    @PostMapping(path = "/resend-activation")
+    public String resendLink(@RequestParam("email") String email){
+        return customerActivateService.resendLink(email);
     }
 
     @PostMapping(path = "/seller")
@@ -49,21 +50,17 @@ public class RegisterController {
 
         User user = appUserDetailsService.registerSeller(seller);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+        /*URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(user.getUserId()).toUri();
-        ResponseEntity.created(location).build();
+        ResponseEntity.created(location).build();*/
 
         return user;
     }
 
     @PostMapping(path = "/admin")
-    public User registerAdmin(@Valid @RequestBody User admin){
+    public User registerAdmin(@Valid @RequestBody Admin admin){
 
         User user = appUserDetailsService.registerAdmin(admin);
-
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(user.getUserId()).toUri();
-        ResponseEntity.created(location).build();
 
         return user;
     }

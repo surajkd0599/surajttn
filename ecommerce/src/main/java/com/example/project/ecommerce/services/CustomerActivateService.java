@@ -1,3 +1,4 @@
+
 package com.example.project.ecommerce.services;
 
 import com.example.project.ecommerce.model.VerificationToken;
@@ -24,7 +25,7 @@ public class CustomerActivateService {
     private CustomerActivateRepo customerActivateRepo;
 
     @Transactional
-        public String activateCustomer(String token) {
+    public String activateCustomer(String token) {
 
 
         VerificationToken customerActivate = customerActivateRepo.findByToken(token);
@@ -39,13 +40,13 @@ public class CustomerActivateService {
                     boolean flag=isTokenExpired(email, customerActivate);
                     if(!flag) {
                         user = userRepository.findByEmail(customerActivate.getUserEmail());
-                       boolean isActivated= activateCustomer(email,user);
-                       if(isActivated)
-                       {
-                           sb.append("Successfully activated");
-                       }
+                        boolean isActivated= activateCustomer(email,user);
+                        if(isActivated)
+                        {
+                            sb.append("Successfully activated");
+                        }
                     }else {
-                            sb.append("Token Expired");
+                        sb.append("Token Expired");
                     }
                 }
             } catch (NullPointerException ex) {
@@ -55,7 +56,7 @@ public class CustomerActivateService {
         }else{
             sb.append("Invalid Token");
         }
-       return sb.toString();
+        return sb.toString();
     }
 
     boolean activateCustomer(String email, User user){
@@ -102,34 +103,33 @@ public class CustomerActivateService {
     public String resendLink(String email) {
 
         User user = userRepository.findByEmail(email);
+        StringBuilder sb = new StringBuilder();
         try {
-            if (user.getEmail().equals(null)) {
+            if (!user.getEmail().equals(null)) {
+                if (user.isActive()) {
+                   return sb.append("Account already active").toString();
+                }else {
+                    customerActivateRepo.deleteByUserEmail(email);
+
+                    String newToken = UUID.randomUUID().toString();
+
+                    VerificationToken localCustomerActivate = new VerificationToken();
+                    localCustomerActivate.setToken(newToken);
+                    localCustomerActivate.setUserEmail(email);
+                    localCustomerActivate.setGeneratedDate(new Date());
+
+                    customerActivateRepo.save(localCustomerActivate);
+
+                    sendEmail.sendEmail("RE-ACCOUNT ACTIVATE TOKEN","To confirm your account, please click here : "
+                            +"http://localhost:8080/confirm-account?token="+newToken+"&email="+email,email);
+
+                    sb.append("Successful");
+                }
             }
         } catch (NullPointerException ex) {
-            return "no email found";
+            sb.append("No email found");
         }
-        if (user.isActive()) {
-            return "Account already active";
-        }
-        if (!user.isActive()) {
-            customerActivateRepo.deleteByUserEmail(email);
-
-            String newToken = UUID.randomUUID().toString();
-
-            VerificationToken localCustomerActivate = new VerificationToken();
-            localCustomerActivate.setToken(newToken);
-            localCustomerActivate.setUserEmail(email);
-            localCustomerActivate.setGeneratedDate(new Date());
-
-            customerActivateRepo.save(localCustomerActivate);
-
-            sendEmail.sendEmail("RE-ACCOUNT ACTIVATE TOKEN","To confirm your account, please click here : "
-                    +"http://localhost:8080/confirm-account?token="+newToken,email);
-
-            return "Successful";
-        }
-
-        return "Successful";
+        return sb.toString();
     }
 }
 

@@ -19,20 +19,23 @@ public class UserDao {
 
     public AppUser loadUserByUsername(String username) {
         User user = userRepository.findByUsername(username);
+        System.out.println(user.getPassword());
 
         List<GrantedAuthorityImpl> grantedAuthorityImpl = new ArrayList<>();
         System.out.println(user);
-        if (username != null) {
-            for (Role auth : user.getRoles()) {
-                grantedAuthorityImpl.add(new GrantedAuthorityImpl(auth.getRole()));
+        if(user.isActive()) {
+            if (username != null) {
+                for (Role auth : user.getRoles()) {
+                    grantedAuthorityImpl.add(new GrantedAuthorityImpl(auth.getRole()));
+                }
+                System.out.println(grantedAuthorityImpl);
+                return new AppUser(user.getUsername(), user.getPassword(),
+                        grantedAuthorityImpl, !user.isEnabled(), !user.isCredentialsNonExpired(), user.isAccountNonLocked());
+            } else {
+                throw new UserNotFoundException("User not found");
             }
-            System.out.println(grantedAuthorityImpl);
-            return new AppUser(user.getUsername(), user.getPassword(),
-                    grantedAuthorityImpl,user.isActive(),!user.isEnabled(),!user.isCredentialsNonExpired());
+        }else {
+            throw new RuntimeException("Account is not activated.");
         }
-        else {
-            throw new UserNotFoundException("User not found");
-        }
-
     }
 }
