@@ -11,7 +11,6 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.UUID;
@@ -33,27 +32,15 @@ public class ForgotPasswordService {
 
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public String sendToken(String email/*,HttpServletRequest request*/){
+    public String sendToken(String email){
         StringBuilder sb = new StringBuilder();
         User user = userRepository.findByEmail(email);
+        ForgotPasswordToken existingUser = forgotPasswordRepo.findByUserEmail(email);
         try {
-            if(!user.equals(null) /*&& null!=request*/){
-
-                /*String authHeader = request.getHeader("Authorization");
-                System.out.println(authHeader);
-                if (authHeader != null) {
-                    String tokenValue = authHeader.replace("Bearer", "").trim();
-                    OAuth2AccessToken accessToken = tokenStore.readAccessToken(tokenValue);
-                    System.out.println(authHeader);
-
-                    tokenStore.removeAccessToken(accessToken);
-                }else
-                {
-                    return sb.append(" Token not found").toString();
-                }*/
-
-                //forgotPasswordRepo.deleteByUserEmail(email);
-
+            if(!user.equals(null)){
+                if(!existingUser.equals(null)){
+                    forgotPasswordRepo.deleteByUserEmail(email);
+                }
                 String token = UUID.randomUUID().toString();
 
                 ForgotPasswordToken forgotPasswordToken = new ForgotPasswordToken();
