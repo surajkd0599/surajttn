@@ -6,9 +6,13 @@ import com.example.project.ecommerce.model.User;
 import com.example.project.ecommerce.repos.CustomerRepository;
 import com.example.project.ecommerce.repos.SellerRepository;
 import com.example.project.ecommerce.repos.UserRepository;
+import com.fasterxml.jackson.databind.ser.FilterProvider;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,12 +33,26 @@ public class AdminService {
     @Autowired
     private SendEmail sendEmail;
 
-    public List<Customer> registeredCustomers(String page,String size, String SortBy){
-        return customerRepository.findAll(PageRequest.of(Integer.parseInt(page),Integer.parseInt(size), Sort.by(SortBy))).getContent();
+    public MappingJacksonValue registeredCustomers(String page,String size, String SortBy){
+        List<Customer> customers = customerRepository.findAll(PageRequest.of(Integer.parseInt(page),Integer.parseInt(size), Sort.by(SortBy))).getContent();
+        SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("userId","firstName","lastName","email","active");
+        FilterProvider filterProvider =  new SimpleFilterProvider().addFilter("CustomerFilter",filter);
+
+        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(customers);
+
+        mappingJacksonValue.setFilters(filterProvider);
+        return mappingJacksonValue;
     }
 
-    public List<Seller> registeredSellers(String page,String size, String SortBy){
-        return sellerRepository.findAll(PageRequest.of(Integer.parseInt(page),Integer.parseInt(size), Sort.by(SortBy))).getContent();
+    public MappingJacksonValue registeredSellers(String page,String size, String SortBy){
+        List<Seller> sellers = sellerRepository.findAll(PageRequest.of(Integer.parseInt(page),Integer.parseInt(size), Sort.by(SortBy))).getContent();
+        SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("userId","firstName","lastName","email","active");
+        FilterProvider filterProvider =  new SimpleFilterProvider().addFilter("Seller-Filter",filter);
+
+        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(sellers);
+
+        mappingJacksonValue.setFilters(filterProvider);
+        return mappingJacksonValue;
     }
 
     public String activateUser(Long userId){
