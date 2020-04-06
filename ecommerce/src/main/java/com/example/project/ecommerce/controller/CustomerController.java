@@ -1,11 +1,11 @@
 package com.example.project.ecommerce.controller;
 
+import com.example.project.ecommerce.model.Cart;
+import com.example.project.ecommerce.model.Product;
+import com.example.project.ecommerce.services.CustomerService;
 import com.example.project.ecommerce.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -15,6 +15,9 @@ public class CustomerController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private CustomerService customerService;
 
     @GetMapping(path = "/getCategory")
     public List<Object[]> getCategry() {
@@ -29,5 +32,10 @@ public class CustomerController {
     @GetMapping(path = "/getVariation/{productName}")
     public List<Object[]> getVariation(@PathVariable(value = "productName") String productName) {
         return productService.getVariation(productName);
+    }
+
+    @PostMapping(path = "/addToCart")
+    public Cart addToCart(@RequestBody Cart cart){
+        return customerService.addToCart(cart);
     }
 }
