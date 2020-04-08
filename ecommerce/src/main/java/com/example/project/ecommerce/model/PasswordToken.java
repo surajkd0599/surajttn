@@ -11,7 +11,7 @@ public class ForgotPasswordToken {
     private static final int EXPIRATION = 60 * 24;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long tokenId;
     private String token;
     private String userEmail;
