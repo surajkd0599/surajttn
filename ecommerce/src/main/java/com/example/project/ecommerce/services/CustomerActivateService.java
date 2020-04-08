@@ -1,6 +1,7 @@
 
 package com.example.project.ecommerce.services;
 
+import com.example.project.ecommerce.exception.UserNotFoundException;
 import com.example.project.ecommerce.model.VerificationToken;
 import com.example.project.ecommerce.model.User;
 import com.example.project.ecommerce.repos.UserRepository;
@@ -8,6 +9,7 @@ import com.example.project.ecommerce.repos.CustomerActivateRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.UUID;
@@ -23,6 +25,8 @@ public class CustomerActivateService {
 
     @Autowired
     private CustomerActivateRepo customerActivateRepo;
+
+    private HttpServletResponse response;
 
     @Transactional
     public String activateCustomer(String token) {
@@ -50,7 +54,7 @@ public class CustomerActivateService {
                     }
                 }
             } catch (NullPointerException ex) {
-                sb.append("No email found");
+                throw new UserNotFoundException("No email found");
             }
 
         }else{
@@ -62,7 +66,7 @@ public class CustomerActivateService {
     boolean activateCustomer(String email, User user){
         boolean flag=false;
         try {
-            user.setEnabled(true);
+            user.setActive(true);
             userRepository.save(user);
             sendEmail.sendEmail("ACCOUNT ACTIVATED", "Your account has been activated", email);
             customerActivateRepo.deleteByUserEmail(email);
@@ -93,7 +97,7 @@ public class CustomerActivateService {
             customerActivateRepo.save(localCustomerActivate);
 
             sendEmail.sendEmail("RE-ACCOUNT ACTIVATE TOKEN","To confirm your account, please click here : "
-                    +"http://localhost:8080/confirm-account?token="+newToken,email);
+                    +"http://localhost:8080/ecommerce/register/confirm-account?token="+newToken,email);
             flag=true;
         }
         return flag;
@@ -121,13 +125,13 @@ public class CustomerActivateService {
                     customerActivateRepo.save(localCustomerActivate);
 
                     sendEmail.sendEmail("RE-ACCOUNT ACTIVATE TOKEN","To confirm your account, please click here : "
-                            +"http://localhost:8080/confirm-account?token="+newToken+"&email="+email,email);
+                            +"http://localhost:8080/ecommerce/register/confirm-account?token="+newToken,email);
 
                     sb.append("Successful");
                 }
             }
         } catch (NullPointerException ex) {
-            sb.append("No email found");
+            throw new UserNotFoundException("No email found");
         }
         return sb.toString();
     }

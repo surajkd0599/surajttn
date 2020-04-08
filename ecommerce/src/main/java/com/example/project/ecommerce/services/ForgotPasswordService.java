@@ -1,13 +1,16 @@
 package com.example.project.ecommerce.services;
 
-import com.example.project.ecommerce.model.ForgotPasswordToken;
+import com.example.project.ecommerce.exception.UserNotFoundException;
+import com.example.project.ecommerce.model.PasswordToken;
 import com.example.project.ecommerce.model.User;
-import com.example.project.ecommerce.repos.ForgotPasswordRepo;
+import com.example.project.ecommerce.model.UserAttempts;
+import com.example.project.ecommerce.repos.PasswordRepo;
+import com.example.project.ecommerce.repos.UserAttemptRepo;
 import com.example.project.ecommerce.repos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.stereotype.Service;
 
@@ -22,81 +25,102 @@ public class ForgotPasswordService {
     private UserRepository userRepository;
 
     @Autowired
-    private ForgotPasswordRepo forgotPasswordRepo;
+    private PasswordRepo forgotPasswordRepo;
 
     @Autowired
     private SendEmail sendEmail;
 
     @Autowired
-    private TokenStore tokenStore;
+    private UserAttemptRepo userAttemptRepo;
 
-    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     public String sendToken(String email){
         StringBuilder sb = new StringBuilder();
         User user = userRepository.findByEmail(email);
-        ForgotPasswordToken existingUser = forgotPasswordRepo.findByUserEmail(email);
+        PasswordToken existingUser = forgotPasswordRepo.findByUserEmail(email);
         try {
-            if(!user.equals(null)){
-                if(!existingUser.equals(null)){
-                    forgotPasswordRepo.deleteByUserEmail(email);
+            if(null!=user){
+                if(user.isActive()) {
+                    if(null!=existingUser){
+                        forgotPasswordRepo.deleteByUserEmail(email);
+                    }
+                    String token = UUID.randomUUID().toString();
+
+                    PasswordToken forgotPasswordToken = new PasswordToken();
+                    forgotPasswordToken.setGeneratedDate(new Date());
+                    forgotPasswordToken.setToken(token);
+                    forgotPasswordToken.setUserEmail(email);
+
+                    forgotPasswordRepo.save(forgotPasswordToken);
+
+                    sendEmail.sendEmail("Reset your password","To reset your password, please click here : "
+                            +"http://localhost:8080/ecommerce/forgotPassword/reset-password?token="+token+"&email="+email,email);
+
+                    sb.append("Change your password");
+                }else {
+                    sb.append("Account is not active");
                 }
-                String token = UUID.randomUUID().toString();
-
-                ForgotPasswordToken forgotPasswordToken = new ForgotPasswordToken();
-                forgotPasswordToken.setGeneratedDate(new Date());
-                forgotPasswordToken.setToken(token);
-                forgotPasswordToken.setUserEmail(email);
-
-                forgotPasswordRepo.save(forgotPasswordToken);
-
-                sendEmail.sendEmail("Reset your password","To reset your password, please click here : "
-                        +"http://localhost:8080/reset-password?token="+token+"&email="+email,email);
-
-                sb.append("Change your password");
             }
         } catch (NullPointerException ex){
-            sb.append("No email found");
+            throw new UserNotFoundException("No email found");
         }
         return sb.toString();
     }
 
     @Transactional
+    @Modifying
     public String resetPassword(String email,String token,String password,String confirmPassword){
 
-        ForgotPasswordToken userData = forgotPasswordRepo.findByUserEmail(email);
+        PasswordToken userData = forgotPasswordRepo.findByUserEmail(email);
         StringBuilder sb = new StringBuilder();
         User user = null;
 
-        if (null!=userData){
-            if(userData.getToken().equals(token)){
-               if(password.equals(confirmPassword)){
-                   boolean flag = isTokenExpired(email,userData);
-                   if(!flag){
-                       user = userRepository.findByEmail(userData.getUserEmail());
-                       user.setPassword(passwordEncoder.encode(password));
-                       userRepository.save(user);
-                       forgotPasswordRepo.deleteByUserEmail(email);
+        try {
+            if (null != userData) {
+                if (userData.getToken().equals(token)) {
+                    if (password.equals(confirmPassword)) {
+                        boolean flag = isTokenExpired(email, userData);
+                        if (!flag) {
+                            user = userRepository.findByEmail(userData.getUserEmail());
+                            user.setPassword(passwordEncoder.encode(password));
+                            userRepository.save(user);
+                            forgotPasswordRepo.deleteByUserEmail(email);
 
-                       sendEmail.sendEmail("Password Changed","Your password has been changed",email);
+                            UserAttempts userAttempt = userAttemptRepo.findByUsername(email);
 
-                       sb.append("Password successfully changed.");
-                   }else {
-                       sb.append("Password not updated as token expired");
-                   }
-               }else {
-                   sb.append("Password not matched");
-               }
-            }else {
-                sb.append("Invalid Token");
+                                if (null != userAttempt) {
+                                    userAttemptRepo.deleteByUsername(email);
+                                    if (!(user.isAccountNonLocked())) {
+                                        user.setAccountNonLocked(true);
+                                        userRepository.save(user);
+                                        sendEmail.sendEmail("Account Unlocked and password changed", "Your password is successfully changed and account is unlocked.", email);
+                                    } else {
+                                        sendEmail.sendEmail("Password Changed", "Your password has changed", email);
+                                    }
+                                } else {
+                                    sendEmail.sendEmail("Password Changed", "Your password has changed", email);
+                                }
+
+                            sb.append("Password successfully changed");
+                        } else {
+                            sb.append("Password not updated as token expired");
+                        }
+                    } else {
+                        sb.append("Password not matched");
+                    }
+                } else {
+                    sb.append("Invalid Token");
+                }
             }
-        }else {
-            sb.append("User not found");
+        }catch (NullPointerException ex){
+            throw new UserNotFoundException("User not found");
         }
         return sb.toString();
     }
 
-    boolean isTokenExpired(String email,ForgotPasswordToken userData){
+    boolean isTokenExpired(String email, PasswordToken userData){
 
         Date date = new Date();
         long diff = date.getTime() - userData.getGeneratedDate().getTime();
