@@ -1,10 +1,11 @@
 package com.example.project.ecommerce.controller;
 
 import com.example.project.ecommerce.model.Cart;
-import com.example.project.ecommerce.model.Product;
 import com.example.project.ecommerce.services.CustomerService;
 import com.example.project.ecommerce.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.converter.json.MappingJacksonValue;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,12 @@ public class CustomerController {
 
     @Autowired
     private CustomerService customerService;
+
+    @GetMapping(path = "/getCustomerDetails/{email}")
+    public MappingJacksonValue getCustomerDetails(@PathVariable("email") String email){
+        return customerService.getCustomerProfile(email);
+    }
+
 
     @GetMapping(path = "/getCategory")
     public List<Object[]> getCategry() {

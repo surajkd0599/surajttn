@@ -1,18 +1,40 @@
 package com.example.project.ecommerce.model;
 
-import javax.persistence.Embeddable;
+import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 
-@Embeddable
+@Entity
+//@Embeddable
 public class Address {
-    private char block;
-    private int houseNumber;
-    private int sectorNumber;
-    private String streetName;
-    private String city;
-    private String district;
-    private String state;
-    private int pincode;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long addressId;
+
+    private char block;
+
+    private int plotNumber;
+
+    private int sectorNumber;
+
+    private String streetName;
+
+    //@NotEmpty(message = "Please enter your city")
+    private String city;
+
+    //@NotEmpty(message = "Please enter your district")
+    private String district;
+
+    //@NotEmpty(message = "Please enter your state")
+    private String state;
+
+    //@NotEmpty(message = "Please enter your country")
+    private String country;
+
+    //@NotEmpty(message = "Please enter your label")
+    private String label;
+
+    private int zipCode;
     public Address() {
     }
 
@@ -24,12 +46,12 @@ public class Address {
         this.block = block;
     }
 
-    public int getHouseNumber() {
-        return houseNumber;
+    public int getPlotNumber() {
+        return plotNumber;
     }
 
-    public void setHouseNumber(int houseNumber) {
-        this.houseNumber = houseNumber;
+    public void setPlotNumber(int plotNumber) {
+        this.plotNumber = plotNumber;
     }
 
     public int getSectorNumber() {
@@ -72,11 +94,53 @@ public class Address {
         this.state = state;
     }
 
-    public int getPincode() {
-        return pincode;
+    public String getCountry() {
+        return country;
     }
 
-    public void setPincode(int pincode) {
-        this.pincode = pincode;
+    public void setCountry(String country) {
+        this.country = country;
     }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public int getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(int zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+              //  "addressId=" + addressId +
+                ", block=" + block +
+                ", plotNumber=" + plotNumber +
+                ", sectorNumber=" + sectorNumber +
+                ", streetName='" + streetName + '\'' +
+                ", city='" + city + '\'' +
+                ", district='" + district + '\'' +
+                ", state='" + state + '\'' +
+                ", country='" + country + '\'' +
+                ", label='" + label + '\'' +
+                ", zipCode=" + zipCode +
+                '}';
+    }
+
+    /*public Long getAddressId() {
+        return addressId;
+    }
+
+    public void setAddressId(Long addressId) {
+        this.addressId = addressId;
+    }*/
+
 }

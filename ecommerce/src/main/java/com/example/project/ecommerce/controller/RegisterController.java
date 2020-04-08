@@ -29,9 +29,6 @@ public class RegisterController {
     private CustomerActivateService customerActivateService;
 
     @Autowired
-    SendEmail sendEmail;
-
-    @Autowired
     private DtoService dtoService;
 
     @PostMapping(path = "/customer")
@@ -58,13 +55,21 @@ public class RegisterController {
     }
 
     @PutMapping(path = "/confirm-account")
-    public String confirmCustomerAccount(@RequestParam("token") String token){
-        return customerActivateService.activateCustomer(token);
+    public String confirmCustomerAccount(@RequestParam("token") String token, HttpServletResponse response){
+        String message = customerActivateService.activateCustomer(token);
+        if(!message.equals("Successfully activated")){
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
+        return message;
     }
 
     @PostMapping(path = "/resend-activation")
-    public String resendLink(@RequestParam("email") String email){
-        return customerActivateService.resendLink(email);
+    public String resendLink(@RequestParam("email") String email,HttpServletResponse response){
+        String message = customerActivateService.resendLink(email);
+        if(!message.equals("Successful")){
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
+        return message;
     }
 
     @PostMapping(path = "/admin")

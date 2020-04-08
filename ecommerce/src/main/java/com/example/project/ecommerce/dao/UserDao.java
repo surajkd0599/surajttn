@@ -18,7 +18,7 @@ public class UserDao {
     UserRepository userRepository;
 
     public AppUser loadUserByUsername(String username) {
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByEmail(username);
         System.out.println(user.getPassword());
 
         List<GrantedAuthorityImpl> grantedAuthorityImpl = new ArrayList<>();
@@ -28,8 +28,7 @@ public class UserDao {
                 for (Role auth : user.getRoles()) {
                     grantedAuthorityImpl.add(new GrantedAuthorityImpl(auth.getRole()));
                 }
-                System.out.println(grantedAuthorityImpl);
-                return new AppUser(user.getUsername(), user.getPassword(),
+                return new AppUser(user.getEmail(), user.getPassword(),
                         grantedAuthorityImpl, !user.isEnabled(), !user.isCredentialsNonExpired(), user.isAccountNonLocked());
             } else {
                 throw new UserNotFoundException("User not found");

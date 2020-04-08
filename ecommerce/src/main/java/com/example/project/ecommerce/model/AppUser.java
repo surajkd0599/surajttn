@@ -14,7 +14,7 @@ public class AppUser implements UserDetails {
     private boolean isAccountNonLocked;
     private boolean isCredentialsNonExpired;
 
-    public AppUser(String username, String password, List<GrantedAuthorityImpl> grantedAuthorities, boolean isEnabled, boolean isAccountNonLocked, boolean isCredentialsNonExpired) {
+    public AppUser(String username, String password, List<GrantedAuthorityImpl> grantedAuthorities,boolean isEnabled, boolean isAccountNonLocked, boolean isCredentialsNonExpired) {
         this.username = username;
         this.password = password;
         this.grantedAuthorities = grantedAuthorities;

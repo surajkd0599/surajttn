@@ -2,6 +2,7 @@ package com.example.project.ecommerce.dtos;
 
 import com.example.project.ecommerce.model.Address;
 import com.example.project.ecommerce.model.Role;
+import com.fasterxml.jackson.annotation.JsonFilter;
 
 import javax.persistence.Column;
 import javax.persistence.Temporal;
@@ -13,6 +14,7 @@ import javax.validation.constraints.Pattern;
 import java.util.Date;
 import java.util.Set;
 
+@JsonFilter("CustomerDto-Filter")
 public class CustomerDto {
     @Column(unique = true)
     private String username;
@@ -31,7 +33,7 @@ public class CustomerDto {
 
     private String gender;
 
-    private Address address;
+    private Set<Address> addresses;
 
     @NotEmpty(message = "Enter your email")
     @Email(message = "Email is not valid")
@@ -103,14 +105,6 @@ public class CustomerDto {
         this.gender = gender;
     }
 
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -157,5 +151,13 @@ public class CustomerDto {
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+
+    public Set<Address> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(Set<Address> addresses) {
+        this.addresses = addresses;
     }
 }
