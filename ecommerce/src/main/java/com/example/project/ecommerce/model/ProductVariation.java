@@ -1,6 +1,11 @@
 package com.example.project.ecommerce.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jdk.nashorn.internal.runtime.JSONFunctions;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
+import org.hibernate.annotations.Type;
+import springfox.documentation.spring.web.json.Json;
 
 import javax.persistence.*;
 import java.util.List;
@@ -8,24 +13,20 @@ import java.util.List;
 @Entity
 public class ProductVariation {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long variationId;
     private String color;
     private String size;
     private Long price;
     private String gender;
+    private JSONObject metadata;
     private int stock;
     private String brand;
 
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "product_Id")
+    @JoinColumn(name = "product_id")
     private List<ProductReview> review;
-
-    @ManyToMany(cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
-    @JoinTable(name = "product_seller",joinColumns = @JoinColumn(name = "variation_id",referencedColumnName = "variationId")
-            ,inverseJoinColumns = @JoinColumn(name = "seller_user_id"))
-    private List<Seller> sellers;
 
     public Long getVariationId() {
         return variationId;
@@ -94,11 +95,11 @@ public class ProductVariation {
         this.review = review;
     }
 
-    public List<Seller> getSellers() {
-        return sellers;
+    public JSONObject getMetadata() {
+        return metadata;
     }
 
-    public void setSellers(List<Seller> sellers) {
-        this.sellers = sellers;
+    public void setMetadata(JSONObject metadata) {
+        this.metadata = metadata;
     }
 }
