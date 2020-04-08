@@ -23,22 +23,21 @@ public class AuthenticationListener implements ApplicationListener<AbstractAuthe
 
         if (appEvent instanceof AuthenticationSuccessEvent)
         {
-            System.out.println("User Successly Logged In");
-
             AuthenticationSuccessEvent event = (AuthenticationSuccessEvent) appEvent;
-
-            //String username = event.getAuthentication().getName();
 
             String username = new String();
             LinkedHashMap<String,String> userMap = new LinkedHashMap<>();
+
             try {
                 userMap = (LinkedHashMap<String, String>) event.getAuthentication().getDetails();
-            } catch (ClassCastException ex) {
+            }catch (ClassCastException ex){
             }
+
             try {
                 username = userMap.get("username");
             } catch (NullPointerException e) {
             }
+
             userAttemptService.userSuccessAttempt(username);
         }
 
@@ -52,22 +51,4 @@ public class AuthenticationListener implements ApplicationListener<AbstractAuthe
             userAttemptService.userFailedAttempt((String) usermap.get("username"));
         }
     }
-
-    /*@EventListener
-    @Transactional
-    public void authenticationPass(AuthenticationSuccessEvent event) {
-        LinkedHashMap<String,String> userMap = new LinkedHashMap<>();
-        try {
-            userMap = (LinkedHashMap<String, String>) event.getAuthentication().getDetails();
-            System.out.println("Username 415  in Success : "+userMap);
-        } catch (ClassCastException ex) {
-
-        }
-        String userEmail = new String();
-        try {
-            userEmail = userMap.get("username");
-            System.out.println("User 415 email is : "+userEmail);
-        } catch (NullPointerException e) {
-        }
-    }*/
 }

@@ -37,6 +37,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
         final DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService);
         authenticationProvider.setPasswordEncoder(bCryptPasswordEncoder());
+
         return authenticationProvider;
     }
 
@@ -57,11 +58,12 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 "/swagger-ui.html",
                 "/webjars/**").anonymous()
                 .antMatchers("/ecommerce/register/**").anonymous()
-                .antMatchers("/ecommerce/admin/home/**").hasAnyRole("ADMIN")
-                .antMatchers("/ecommerce/seller/home/**").hasAnyRole("SELLER")
-                .antMatchers("/updateUser/{username}").hasAnyRole("ADMIN","SELLER","CUSTOMER")
-                .antMatchers("/ecommerce/user/home").permitAll()
-                .antMatchers("/doLogout").hasAnyRole("ADMIN","USER","SELLER")
+                .antMatchers("/ecommerce/admin/home/**").hasAuthority("ADMIN")
+                .antMatchers("/ecommerce/seller/home/").hasAuthority("SELLER")
+                .antMatchers("/updateUser/{username}").hasAnyAuthority("ADMIN","SELLER","CUSTOMER")
+                .antMatchers("/ecommerce/forgotPassword/**").permitAll()//.hasAnyAuthority("ADMIN","SELLER","CUSTOMER")
+                .antMatchers("/ecommerce/user/home/**").permitAll()
+                .antMatchers("/ecommerce/app/**").hasAnyAuthority("ADMIN","CUSTOMER","SELLER")
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()
