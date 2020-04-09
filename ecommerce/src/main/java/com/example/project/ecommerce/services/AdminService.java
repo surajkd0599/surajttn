@@ -1,5 +1,6 @@
 package com.example.project.ecommerce.services;
 
+import com.example.project.ecommerce.exception.UserNotFoundException;
 import com.example.project.ecommerce.model.Customer;
 import com.example.project.ecommerce.model.Seller;
 import com.example.project.ecommerce.model.User;
@@ -13,8 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.converter.json.MappingJacksonValue;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,7 +49,8 @@ public class AdminService {
 
     public MappingJacksonValue registeredSellers(String page,String size, String SortBy){
         List<Seller> sellers = sellerRepository.findAll(PageRequest.of(Integer.parseInt(page),Integer.parseInt(size), Sort.by(SortBy))).getContent();
-        SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("userId","firstName","lastName","email","active");
+
+        SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("userId","firstName","lastName","email","active","companyName","companyContact","addresses");
         FilterProvider filterProvider =  new SimpleFilterProvider().addFilter("Seller-Filter",filter);
 
         MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(sellers);
@@ -55,6 +59,7 @@ public class AdminService {
         return mappingJacksonValue;
     }
 
+    @Transactional
     public String activateUser(Long userId){
         Optional<User> user = userRepository.findById(userId);
         StringBuilder sb = new StringBuilder();
@@ -71,11 +76,12 @@ public class AdminService {
                 sb.append("User is already activated");
             }
         }else {
-            sb.append("User not found");
+            throw new UserNotFoundException("User not found");
         }
         return sb.toString();
     }
 
+    @Transactional
     public String deactivateUser(Long userId){
         Optional<User> user = userRepository.findById(userId);
         StringBuilder sb = new StringBuilder();
@@ -92,7 +98,7 @@ public class AdminService {
                 sb.append("User is already de-activated");
             }
         }else {
-            sb.append("User not found");
+            throw new UserNotFoundException("User not found");
         }
         return sb.toString();
     }

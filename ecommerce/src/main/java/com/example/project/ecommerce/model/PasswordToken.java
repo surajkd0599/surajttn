@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import java.util.Date;
 
 @Entity
-public class ForgotPasswordToken {
+public class PasswordToken {
     private static final int EXPIRATION = 60 * 24;
 
     @Id
@@ -17,7 +17,7 @@ public class ForgotPasswordToken {
     private String userEmail;
     private Date generatedDate;
 
-    public ForgotPasswordToken() {
+    public PasswordToken() {
     }
 
     public static int getEXPIRATION() {

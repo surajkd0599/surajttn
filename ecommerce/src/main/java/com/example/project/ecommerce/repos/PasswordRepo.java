@@ -1,11 +1,11 @@
 package com.example.project.ecommerce.repos;
 
-import com.example.project.ecommerce.model.ForgotPasswordToken;
+import com.example.project.ecommerce.model.PasswordToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ForgotPasswordRepo extends JpaRepository<ForgotPasswordToken,Long> {
-    ForgotPasswordToken findByUserEmail(String email);
+public interface PasswordRepo extends JpaRepository<PasswordToken,Long> {
+    PasswordToken findByUserEmail(String email);
     void deleteByUserEmail(String email);
 }
