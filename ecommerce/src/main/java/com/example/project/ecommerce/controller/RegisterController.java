@@ -47,7 +47,11 @@ public class RegisterController {
     public String registerSeller(@Valid @RequestBody SellerDto sellerDto,HttpServletResponse response){
         if(dtoService.validateSeller(sellerDto).equals("validated")) {
             response.setStatus(HttpServletResponse.SC_CREATED);
-            return appUserDetailsService.registerSeller(sellerDto);
+            String message = appUserDetailsService.registerSeller(sellerDto);
+            if (!message.equals("Registration Successful")){
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            }
+            return message;
         }else {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return dtoService.validateSeller(sellerDto);

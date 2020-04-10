@@ -1,8 +1,11 @@
 package com.example.project.ecommerce.services;
 
 import com.example.project.ecommerce.dao.UserDao;
+import com.example.project.ecommerce.dtos.CustomerDto;
+import com.example.project.ecommerce.dtos.SellerDto;
 import com.example.project.ecommerce.model.*;
 import com.example.project.ecommerce.repos.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -41,9 +46,17 @@ public class AppUserDetailsService implements UserDetailsService {
     @Autowired
     private SendEmail sendEmail;
 
-    public String registerCustomer(Customer customer){
+    @Transactional
+    public String registerCustomer(CustomerDto customerDto){
+        Customer customer = new Customer();
+        BeanUtils.copyProperties(customerDto, customer);
         String pass = passwordEncoder.encode(customer.getPassword());
+
+        Set<Role> roles = new HashSet<>();
+        roles.add(new Role("CUSTOMER"));
         customer.setPassword(pass);
+        customer.setRoles(roles);
+
         customerRepository.save(customer);
 
         String token = UUID.randomUUID().toString();
@@ -57,17 +70,27 @@ public class AppUserDetailsService implements UserDetailsService {
         String  email = customer.getEmail();
 
         sendEmail.sendEmail("ACCOUNT ACTIVATE TOKEN","To confirm your account, please click here : "
-                +"http://localhost:8080/ecommerce/register/confirm-account?token="+token+"&email="+email,email);
+                +"http://localhost:8080/ecommerce/register/confirm-account?token="+token,email);
 
         return "Registration Successful";
     }
 
-    public User registerSeller(Seller seller){
-        String pass = passwordEncoder.encode(seller.getPassword());
-        seller.setPassword(pass);
-        return sellerRepository.save(seller);
+    @Transactional
+    public String  registerSeller(SellerDto sellerDto){
+        Seller seller = new Seller();
+        BeanUtils.copyProperties(sellerDto, seller);
+
+        if(seller.getAddresses().size() == 1) {
+            String pass = passwordEncoder.encode(seller.getPassword());
+            seller.setPassword(pass);
+            sellerRepository.save(seller);
+            return "Registration Successful";
+        }else {
+            return "Seller cannot have multiple addresses";
+        }
     }
 
+    @Transactional
     public User registerAdmin(Admin admin)
     {
         String pass = passwordEncoder.encode(admin.getPassword());
@@ -78,10 +101,11 @@ public class AppUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserDetails userDetails = userDao.loadUserByUsername(username);
+        System.out.println("User Details : "+userDetails);
         return userDetails;
     }
 
-    @Transactional
+    /*@Transactional
     @Modifying
     public void updateUserUsername(String username,String userName){
         Long userId = userRepository.findUserId(username);
@@ -114,5 +138,5 @@ public class AppUserDetailsService implements UserDetailsService {
     public void updateUserPassword(String username,String password){
         Long userId = userRepository.findUserId(username);
         userRepository.updateUserPassword(userId,password);
-    }
+    }*/
 }

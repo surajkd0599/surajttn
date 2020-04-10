@@ -18,6 +18,8 @@ public interface ProductRepository extends JpaRepository<ProductCategory, Long> 
 
     ProductCategory save(ProductCategory productCategory);
 
+    Product findByCategoryId(Long categoryid);
+
     @Query("from ProductCategory pc where pc.categoryName=:name")
     List<Object[]> findByName(@Param("name") String name);
 

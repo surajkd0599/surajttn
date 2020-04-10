@@ -1,12 +1,6 @@
 package com.example.project.ecommerce.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.validator.constraints.UniqueElements;
-
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
 import java.util.Date;
 import java.util.Set;
 
@@ -14,39 +8,40 @@ import java.util.Set;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long userId;
+
     @Column(unique = true)
     private String username;
+
     private String firstName;
+
     private String lastName;
+
     private int age;
+
     @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
-    private char gender;
-    @Embedded
-    private Address address;
+
+    private String gender;
 
     private boolean isActive;
-    @JsonIgnore
+
     private boolean isEnabled;
-    @JsonIgnore
+
     private boolean isAccountNonLocked;
-    @JsonIgnore
+
     private boolean isCredentialsNonExpired;
 
-    @NotEmpty(message = "Email must be unique")
-    @Email(message = "Email is not valid")
     @Column(unique = true)
     private String email;
 
-    @NotEmpty(message = "Password is required")
-   // @Pattern(regexp = "(?=.*[a-z])(?=.*[0-9])(?=.*[@#$%])(?=.*[A-Z]).{8,15}",message = "Password is not valid")
     private String password;
-    @NotEmpty(message = "Phone number is required")
-    @Pattern(regexp="\\d{10}",
-            message="Mobile number is invalid")
-    private String contact;
+
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private Set<Address> addresses;
+
     @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",joinColumns = @JoinColumn(name = "user_id",referencedColumnName = "userId")
             ,inverseJoinColumns = @JoinColumn(name = "role_id",referencedColumnName = "roleId"))
@@ -71,11 +66,11 @@ public class User {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public char getGender() {
+    public String getGender() {
         return gender;
     }
 
-    public void setGender(char gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 
@@ -119,14 +114,6 @@ public class User {
         this.age = age;
     }
 
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -143,36 +130,16 @@ public class User {
         this.password = password;
     }
 
-    public String getContact() {
-        return contact;
-    }
-
-    public void setContact(String contact) {
-        this.contact = contact;
-    }
-
     public boolean isEnabled() {
         return isEnabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        isEnabled = enabled;
     }
 
     public boolean isAccountNonLocked() {
         return isAccountNonLocked;
     }
 
-    public void setAccountNonLocked(boolean accountNonLocked) {
-        isAccountNonLocked = accountNonLocked;
-    }
-
     public boolean isCredentialsNonExpired() {
         return isCredentialsNonExpired;
-    }
-
-    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
-        isCredentialsNonExpired = credentialsNonExpired;
     }
 
     public boolean isActive() {
@@ -181,6 +148,26 @@ public class User {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
+    }
+
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        isAccountNonLocked = accountNonLocked;
+    }
+
+    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
+        isCredentialsNonExpired = credentialsNonExpired;
+    }
+
+    public Set<Address> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(Set<Address> addresses) {
+        this.addresses = addresses;
     }
 
     @Override
@@ -192,15 +179,14 @@ public class User {
                 ", lastName='" + lastName + '\'' +
                 ", age=" + age +
                 ", dateOfBirth=" + dateOfBirth +
-                ", gender=" + gender +
-                ", address=" + address +
+                ", gender='" + gender + '\'' +
                 ", isActive=" + isActive +
                 ", isEnabled=" + isEnabled +
                 ", isAccountNonLocked=" + isAccountNonLocked +
                 ", isCredentialsNonExpired=" + isCredentialsNonExpired +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", contact='" + contact + '\'' +
+                ", addresses=" + addresses +
                 ", roles=" + roles +
                 '}';
     }

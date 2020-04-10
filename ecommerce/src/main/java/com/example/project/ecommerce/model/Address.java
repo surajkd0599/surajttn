@@ -2,6 +2,7 @@ package com.example.project.ecommerce.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.util.Objects;
 
 @Entity
 //@Embeddable
@@ -116,6 +117,21 @@ public class Address {
 
     public void setZipCode(int zipCode) {
         this.zipCode = zipCode;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Address address = (Address) o;
+        return plotNumber == address.plotNumber &&
+                Objects.equals(addressId, address.addressId) &&
+                Objects.equals(label, address.label);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(addressId, plotNumber, label);
     }
 
     @Override

@@ -1,53 +1,44 @@
 package com.example.project.ecommerce.model;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity
-@PrimaryKeyJoinColumn(name = "userId")
+@PrimaryKeyJoinColumn(name = "user_id")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFilter("CustomerFilter")
 public class Customer extends User{
 
-    /*@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long customerId;
+    private String mobileNo;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private User user;*/
-    @JsonIgnore
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_user_id")
     private Cart cart;
 
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name="customer_user_Id")
-    private List<Orders> orders;
+    private Set<Orders> orders;
 
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name="customer_user_id")
-    private List<ProductReview> productReviews;
+    private Set<ProductReview> productReviews;
 
-    public List<Orders> getOrders() {
+    public Set<Orders> getOrders() {
         return orders;
     }
 
-    public void setOrders(List<Orders> orders) {
+    public void setOrders(Set<Orders> orders) {
         this.orders = orders;
     }
 
-    public List<ProductReview> getProductReviews() {
+    public Set<ProductReview> getProductReviews() {
         return productReviews;
     }
 
-    public void setProductReviews(List<ProductReview> productReviews) {
+    public void setProductReviews(Set<ProductReview> productReviews) {
         this.productReviews = productReviews;
     }
 
@@ -57,5 +48,23 @@ public class Customer extends User{
 
     public void setCart(Cart cart) {
         this.cart = cart;
+    }
+
+    public String getMobileNo() {
+        return mobileNo;
+    }
+
+    public void setMobileNo(String mobileNo) {
+        this.mobileNo = mobileNo;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "mobileNo='" + mobileNo + '\'' +
+                ", cart=" + cart +
+                ", orders=" + orders +
+                ", productReviews=" + productReviews +
+                '}';
     }
 }

@@ -9,4 +9,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer,Long> {
     Page<Customer> findAll(Pageable pageable);
+
+    Customer findByUserId(Long userId);
+
+    Customer findByEmail(String email);
 }

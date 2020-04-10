@@ -15,21 +15,16 @@ public class ProductController {
     private ProductService productService;
 
     //@PreAuthorize("hasRole('SELLER')")
-    @PostMapping(path = "/addCategory")
-    public ProductCategory addProduct(@RequestBody ProductCategory productCategory) {
-        return productService.addCategory(productCategory);
-    }
-
     @GetMapping(path = "/getCategory")
     public List<Object[]> getCategry() {
         return productService.getCategory();
     }
 
-    @GetMapping(path = "/getProduct/{categoryName}")
+   /* @GetMapping(path = "/getProduct/{categoryName}")
     public List<Object[]> getProduct(@PathVariable(value = "categoryName") String categoryName) {
         return productService.getProduct(categoryName);
     }
-
+*/
     @GetMapping(path = "/getVariation/{productName}")
     public List<Object[]> getVariation(@PathVariable(value = "productName") String productName) {
         return productService.getVariation(productName);

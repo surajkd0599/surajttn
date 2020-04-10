@@ -1,6 +1,8 @@
 package com.example.project.ecommerce.services;
 
+import com.example.project.ecommerce.model.Product;
 import com.example.project.ecommerce.model.ProductCategory;
+import com.example.project.ecommerce.model.Seller;
 import com.example.project.ecommerce.repos.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +14,8 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    public ProductCategory addCategory(ProductCategory productCategory){return productRepository.save(productCategory);}
+    public String addCategory(ProductCategory productCategory){ productRepository.save(productCategory);
+    return "Product added.";}
 
     public List<Object[]> getCategory(){
        return productRepository.findCategory();

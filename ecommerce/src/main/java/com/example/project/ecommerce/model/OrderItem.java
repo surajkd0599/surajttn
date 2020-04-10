@@ -6,7 +6,7 @@ import java.util.List;
 @Entity
 public class OrderItem {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long OrderItemId;
     private int quantity;
 

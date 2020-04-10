@@ -34,7 +34,7 @@ public class SellerDto {
     private String gender;
 
     //@NotEmpty(message = "Must provide company address")
-    private Address address;
+    private Set<Address> addresses;
 
     @NotEmpty(message = "Email your email")
     @Email(message = "Email is not valid")
@@ -121,14 +121,6 @@ public class SellerDto {
         this.gender = gender;
     }
 
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -191,5 +183,13 @@ public class SellerDto {
 
     public void setAccountNonLocked(boolean accountNonLocked) {
         isAccountNonLocked = accountNonLocked;
+    }
+
+    public Set<Address> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(Set<Address> addresses) {
+        this.addresses = addresses;
     }
 }

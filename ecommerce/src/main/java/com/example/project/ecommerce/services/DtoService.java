@@ -19,28 +19,37 @@ public class DtoService {
     private SellerRepository sellerRepository;
 
     public String validateCustomer(CustomerDto customerDto){
-        String str = "validated";
+        StringBuilder sb = new StringBuilder();
         User user = userRepository.findByEmail(customerDto.getEmail());
-        System.out.println("user object "+user);
         if (null!=user){
-           str = "Email already exist";
+           sb.append("Email already exist");
         }else if(!customerDto.getPassword().equals(customerDto.getConfirmPassword())){
-            str="Passswords not matched";
+            sb.append("Passswords not matched");
+        }else {
+            sb.append("validated");
         }
-        return str;
+        return sb.toString();
     }
 
     public String validateSeller(SellerDto sellerDto){
-        String str = "validated";
+        StringBuilder sb = new StringBuilder();
+        System.out.println("Seller Dto is : "+sellerDto);
         User user = userRepository.findByEmail(sellerDto.getEmail());
+
+        System.out.println("Seller is : "+user);
+
+        System.out.println("Gst number is : "+sellerDto.getGst());
         Seller seller = sellerRepository.findByGst(sellerDto.getGst());
         if (null!=user){
-            str = "Email already exist";
+            sb.append("Email already exist");
         }else if(!sellerDto.getPassword().equals(sellerDto.getConfirmPassword())){
-            str = "Passwords not matched";
+            sb.append("Passwords not matched");
         }else if(null!=seller){
-            str = "Gst numer already exist";
+            System.out.println("Seller Gst : "+seller);
+            sb.append("Gst number already exist");
+        }else {
+            sb.append("validated");
         }
-        return str;
+        return sb.toString();
     }
 }

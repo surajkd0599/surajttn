@@ -9,4 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SellerRepository extends JpaRepository<Seller,Long> {
     Page<Seller> findAll(Pageable pageable);
+
+    Seller findByUserId(Long userId);
+    Seller findByGst(String gst);
 }

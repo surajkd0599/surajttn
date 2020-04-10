@@ -53,8 +53,6 @@ public class CustomerDto {
     @Pattern(regexp="\\d{10}", message="Mobile number is invalid")
     private String mobileNo;
 
-    private Set<Role> roles;
-
     private boolean isAccountNonLocked;
 
     public String getUsername() {
@@ -119,14 +117,6 @@ public class CustomerDto {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
     }
 
     public String getMobileNo() {

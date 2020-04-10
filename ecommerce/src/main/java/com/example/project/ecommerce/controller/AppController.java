@@ -43,25 +43,11 @@ public class AppController {
         return "Logged out successfully";
     }
 
-    @PostMapping("/getToken/{email}")
-    public String getToken(@PathVariable("email") String email, HttpServletResponse response){
-        if(emailValidation.validateEmail(email)) {
-            String message = passwordService.sendToken(email);
-            if(!message.equals("Change your password")){
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            }
-            return message;
-        }else {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return "Email is not valid";
-        }
-    }
-
-    @PatchMapping("/reset-password")
-    public String resetPassword(@RequestParam("token") String token, @RequestParam("email") String email,
+    @PatchMapping("/update-password")
+    public String updatePassword(@RequestParam("email") String email,
                                 @RequestParam String oldPass, String newPass, String confirmPass, HttpServletResponse response){
         if(passwordValidation.validatePassword(oldPass,newPass,confirmPass)){
-            String message = passwordService.resetPassword(email,token,oldPass,newPass,confirmPass);
+            String message = passwordService.updatePassword(email, oldPass, newPass, confirmPass);
             if(!message.equals("Password successfully changed")){
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             }

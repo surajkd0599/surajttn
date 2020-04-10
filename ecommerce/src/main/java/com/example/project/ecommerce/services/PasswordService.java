@@ -31,54 +31,16 @@ public class PasswordService {
     @Autowired
     PasswordEncoder passwordEncoder ;
 
-    public String sendToken(String email){
-
-        StringBuilder sb = new StringBuilder();
-        User user = userRepository.findByEmail(email);
-
-        try {
-            if (null != user) {
-                if (user.isActive()) {
-                    String token = UUID.randomUUID().toString();
-
-                    PasswordToken passwordToken = new PasswordToken();
-                    passwordToken.setGeneratedDate(new Date());
-                    passwordToken.setToken(token);
-                    passwordToken.setUserEmail(email);
-
-                    passwordRepo.save(passwordToken);
-
-                    sendEmail.sendEmail("Change Password", "To reset your password, please click here:" +
-                            "http://localhost:8080/ecommerce/password/reset-password?token=" + token + "&email=" + email, email);
-
-                    sb.append("Change your password");
-                }else {
-                    sb.append("User is not active");
-                }
-            }
-        }catch (NullPointerException ex){
-            throw new UserNotFoundException("User not found");
-        }
-        return sb.toString();
-    }
-
     @Transactional
     @Modifying
-    public String resetPassword(String email, String token, String oldPass, String newPass, String confirmPass){
+    public String updatePassword(String email, String oldPass, String newPass, String confirmPass){
 
         StringBuilder sb = new StringBuilder();
         User user = userRepository.findByEmail(email);
 
-        PasswordToken userData = passwordRepo.findByUserEmail(email);
-
-        try {
-            if(null != userData){
-                if(userData.getToken().equals(token)){
                     if(passwordEncoder.matches(oldPass,user.getPassword())){
-                        if(newPass.equals(confirmPass)){
-                            boolean flag = isTokenExpired(email,userData);
 
-                            if(!flag){
+                        if(newPass.equals(confirmPass)){
                                 user.setPassword(passwordEncoder.encode(newPass));
                                 userRepository.save(user);
                                 passwordRepo.deleteByUserEmail(email);
@@ -86,37 +48,13 @@ public class PasswordService {
                                 sendEmail.sendEmail("Password Changed","Your password has changed",email);
 
                                 sb.append("Password successfully changed");
-                            }else {
-                                sb.append("Token expired");
-                            }
                         }else{
                             sb.append("New password and confirm password not matched");
                         }
                     }else {
                         sb.append("Old password is not correct");
                     }
-                }else {
-                    sb.append("Invalid token");
-                }
-            }
-        }catch (NullPointerException ex){
-            throw new UserNotFoundException("User not found");
-        }
 
         return sb.toString();
-    }
-
-    boolean isTokenExpired(String email, PasswordToken userData){
-
-        Date date = new Date();
-        long diff = date.getTime() - userData.getGeneratedDate().getTime();
-        long diffHours = diff / (60 * 60 * 1000);
-
-        boolean flag = false;
-        if (diffHours > 24) {
-            passwordRepo.deleteByUserEmail(email);
-            flag=true;
-        }
-        return flag;
     }
 }

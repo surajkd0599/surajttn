@@ -7,7 +7,7 @@ import java.util.List;
 @Entity
 public class Orders {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long orderId;
     @Temporal(TemporalType.DATE)
     private Date orderPlacedDate;
